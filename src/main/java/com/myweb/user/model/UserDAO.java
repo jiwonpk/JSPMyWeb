@@ -64,10 +64,145 @@ public class UserDAO {
 		}
 		return result;
 	}
+	//회원가입기능
+	public void insertUser(UserVO vo) {
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		String sql = "insert into users(id, pw ,name ,email ,address, gender)"
+					+"values(?,?,?,?,?,?)";
+		
+		try {
+			
+			conn = DriverManager.getConnection(url,uid,upw);
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, vo.getId());
+			pstmt.setString(2, vo.getPw());
+			pstmt.setString(3,vo.getName());
+			pstmt.setString(4,vo.getEmail());
+			pstmt.setString(5,vo.getAddress());
+			pstmt.setString(6, vo.getGender());
+			
+			
+			pstmt.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			JdbcUtil.close(conn, pstmt, null);
+		}
+		
+	}
 	
+	//로그인기능
+	public UserVO login(String id, String pw) {
+		
+		UserVO vo = null;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		String sql = "select * from users where id = ? and pw = ?";
+		
+			try {
+				
+				conn= DriverManager.getConnection(url, uid, upw);
+				
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, id);
+				pstmt.setString(2, pw);
+				
+				rs = pstmt.executeQuery();
+				
+				if(rs.next()) { //로그인 성공(UserVO에 필요한 값을 저장)
+					
+					vo = new UserVO();
+					vo.setId(id);
+					vo.setName(rs.getString("name"));
+				}
+				
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}finally {
+				JdbcUtil.close(conn, pstmt, rs);
+			}
+		
+		return vo;
+	}
 	
+	//회원의 정보를 조회
+	public UserVO getUserInfo(String id) {
+		
+		UserVO vo = null;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		String sql = "select * from users where id = ?";
+		
+		try {
+			
+			conn = DriverManager.getConnection(url,uid,upw);
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				
+				vo = new UserVO()		;
+				vo.setId(rs.getString("id"));
+				vo.setPw(rs.getString("Pw"));
+				vo.setName(rs.getString("Name"));
+				vo.setEmail(rs.getString("Email"));
+				vo.setAddress(rs.getString("Address"));
+				
+				
+				
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			JdbcUtil.close(conn, pstmt, null);
+		}
+		
+		
+		return vo;
+	}
 	
-	
+	//회원의 정보를 수정
+	public int update(UserVO vo) {
+		int result = 0;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		String sql = "update users set pw = ?, name = ?, email = ?, address = ?, gender = ? where id = ? ";
+		try {
+			conn = DriverManager.getConnection(url,uid,upw);
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1,vo.getPw());
+			pstmt.setString(2,vo.getName());
+			pstmt.setString(3,vo.getEmail());
+			pstmt.setString(4,vo.getAddress());
+			pstmt.setString(5,vo.getGender());
+			pstmt.setString(6,vo.getId());
+			
+			result = pstmt.executeUpdate(); //0이면 실패, 1이면 성공
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			JdbcUtil.close(conn, pstmt, null);
+		}
+		
+		return result;
+	}
 	
 	
 	

@@ -11,7 +11,7 @@
 			<tr>
 				<td>아이디</td>
 				<td>
-					<input type="text" name="id" value="" readonly="readonly">
+					<input type="text" name="id" value="${vo.Id }" readonly>
 				</td>
 			</tr>
 			<tr>
@@ -29,7 +29,7 @@
 			<tr>
 				<td>이름</td>
 				<td>
-					<input type="text" name="name" value="">
+					<input type="text" name="name" value="${vo.Name }">
 				</td>
 				
 			</tr>
@@ -37,13 +37,21 @@
 			<tr>
 				<td>이메일</td>
 				<td>
-					<input type="text" name="email" value="" placeholder="ex) abc@def.com">
+					<input type="text" name="email" value="${vo.Email} }" placeholder="ex) abc@def.com">
 				</td>
 			</tr>
 			<tr>
 				<td>주소</td>
 				<td>
-					<input type="text" name="address" value="" placeholder="ex) OO시 OO구">
+					<input type="text" name="address" value="${vo.Address} }" placeholder="ex) OO시 OO구">
+				</td>
+			</tr>
+			<tr>
+				<td>성별</td>
+				<td>
+					<input type="radio" name="gender" value=${vo.gender == 'M' ? 'checked' : ''}  >남자
+					<input type="radio" name="gender" value=${vo.gender == 'F' ? 'checked' : ''}  >여자
+					
 				</td>
 			</tr>
 		</table>

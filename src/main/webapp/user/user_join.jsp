@@ -4,10 +4,10 @@
 	<%@ include file="../include/header.jsp" %>
 
 	<div align="center" class="div_center">
-		<h3>회원가입 클론코딩</h3>
+		<h3>버스 예약</h3>
 		<hr>
 		
-		<form action="joinForm.user" method="post" name="reg_form">
+		<form action="updateForm.user" method="post">
 			<table border="1">
 				<tr>
 					<td>아이디</td>
@@ -52,8 +52,8 @@
 				<tr>
 					<td>성별</td>
 					<td>
-						<input type="radio" name="gender" >남자
-						<input type="radio" name="gender" checked>여자
+						<input type="radio" name="gender" value="M">남자
+						<input type="radio" name="gender" value="F" checked>여자
 					</td>
 				</tr>
 				
@@ -64,13 +64,13 @@
 			<br>
 
 
-			<input type="submit" value="회원가입" class="btn btn-default">
+			<input type="submit" value="수정" class="btn btn-default">
 			<!-- 
 			<input type="button" value="회원가입" class="btn btn-default" onclick="joinConfirm()"> &nbsp;&nbsp;
 			 -->
 			
 			<input type="reset" value="취소" class="btn btn-default" onclick="">  
-			
+			<div>${msg}</div>
 		</form>	
 	</div>
 	

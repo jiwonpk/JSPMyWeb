@@ -89,4 +89,25 @@ public class UserServiceImpl implements UserService {
 		
 		return result;
 	}
+
+	@Override
+	public int delete(HttpServletRequest request, HttpServletResponse response) {
+		
+		//세션에서 아이디를 얻음
+		HttpSession session =request.getSession();
+		String id = (String)session.getAttribute("user_id");
+		String pw = request.getParameter("pw");
+		
+		UserVO vo = dao.login(id, pw);
+		
+		if(vo != null) { //비밀번호가 일치
+			//delete작업
+			
+		}else {  //비밀번호가 일치하지 않음
+			return 0;
+		}
+		
+		
+		return 0;
+	}
 }

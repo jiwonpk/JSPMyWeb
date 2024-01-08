@@ -204,7 +204,28 @@ public class UserDAO {
 		return result;
 	}
 	
-	
+	//회원삭제 메서드
+	public void delete(String id) {
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		String sql = "delete from users where id = ?";
+		
+		try {
+			
+			conn = DriverManager.getConnection(url, uid, upw);
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			
+			pstmt.execute();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			JdbcUtil.close(conn, pstmt, null);
+		}
+	}
 	
 	
 	

@@ -118,9 +118,42 @@ public class UserController extends HttpServlet {
 			out.println("location.href='mypage.user';");
 			out.println("</script>");
 			
-		}else {
+		}else { //탈퇴화면
 			response.sendRedirect("mypage.user");
 		}
+		
+	}else if(path.equals("/user/delete.user")) { //탈퇴요청
+		request.getRequestDispatcher("user_delete.jsp").forward(request, response);
+		
+	}else if(path.equals("/user/deleteForm.user")) {//회원탈퇴요청
+		
+		/*
+		 * 1.service영역의 delete메서드로 연결합니다.
+		 * 2.service에서는 먼저 login메서드를 이용해서 회원의 정보를 조회해서 가지고 옵니다.
+		 * 3.회원이 있다는 것은 비밀번호가 일치한다는 의미
+		 * 4.delete메서드를 호출시켜서 회원정보를 삭제하고, 세션도 삭제하고, 홈화면으로 리다이렉트
+		 * 5.비밀번호가 일치하지않아서 실패한 경우에는, delete.jsp화면으로 메시지를 보내주세요. 
+		 */
+		
+		int result = service.delete(request, response);
+		
+		if(result == 1) {//삭제성공
+			
+			response.setContentType("text/html; charset=UTF-8");
+			PrintWriter out = response.getWriter();
+			out.println("<script>");
+			out.println("alert('정상적으로 탈퇴되었습니다');");
+			out.println("location.href='/';");
+			out.println("</script>");
+			
+			
+			
+		}else { //삭제실패
+			request.setAttribute("msg", "비밀번호를 확인하세요");
+			request.getRequestDispatcher("user_delete.jsp").forward(request, response);
+		}
+		
+		
 	}
 		
 }

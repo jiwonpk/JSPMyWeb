@@ -2,7 +2,6 @@ package com.myweb.user.service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import com.myweb.user.model.UserVO;
 
@@ -13,5 +12,11 @@ public interface UserService {
 	public UserVO getUserInfo(HttpServletRequest request, HttpServletResponse response);
 	public int update(HttpServletRequest request, HttpServletResponse response);
 	public int delete(HttpServletRequest request, HttpServletResponse response);
-	
 }
+
+
+
+
+
+
+

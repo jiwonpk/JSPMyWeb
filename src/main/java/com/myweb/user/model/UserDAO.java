@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 
 import com.myweb.util.JdbcUtil;
 
@@ -70,29 +71,29 @@ public class UserDAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		
-		String sql = "insert into users(id, pw ,name ,email ,address, gender)"
-					+"values(?,?,?,?,?,?)";
+		String sql = "insert into users(id, pw, name, email, address, gender) "
+					+"values(?, ?, ?, ?, ?, ?)";
 		
 		try {
 			
-			conn = DriverManager.getConnection(url,uid,upw);
+			conn = DriverManager.getConnection(url, uid, upw);
 			
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, vo.getId());
-			pstmt.setString(2, vo.getPw());
-			pstmt.setString(3,vo.getName());
-			pstmt.setString(4,vo.getEmail());
-			pstmt.setString(5,vo.getAddress());
-			pstmt.setString(6, vo.getGender());
-			
+			pstmt.setString(1, vo.getId() );
+			pstmt.setString(2, vo.getPw() );
+			pstmt.setString(3, vo.getName() );
+			pstmt.setString(4, vo.getEmail() );
+			pstmt.setString(5, vo.getAddress() );
+			pstmt.setString(6, vo.getGender() );
 			
 			pstmt.executeUpdate();
-			
+						
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
+		} finally {
 			JdbcUtil.close(conn, pstmt, null);
 		}
+		
 		
 	}
 	
@@ -107,30 +108,31 @@ public class UserDAO {
 		
 		String sql = "select * from users where id = ? and pw = ?";
 		
-			try {
+		try {
+			
+			conn = DriverManager.getConnection(url, uid, upw);
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			pstmt.setString(2, pw);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) { //로그인 성공(UserVO에 필요한 값을 저장)
 				
-				conn= DriverManager.getConnection(url, uid, upw);
+				vo = new UserVO();
+				vo.setId(id);
+				vo.setName( rs.getString("name") );
 				
-				pstmt = conn.prepareStatement(sql);
-				pstmt.setString(1, id);
-				pstmt.setString(2, pw);
-				
-				rs = pstmt.executeQuery();
-				
-				if(rs.next()) { //로그인 성공(UserVO에 필요한 값을 저장)
-					
-					vo = new UserVO();
-					vo.setId(id);
-					vo.setName(rs.getString("name"));
-				}
-				
-				
-			} catch (Exception e) {
-				e.printStackTrace();
-			}finally {
-				JdbcUtil.close(conn, pstmt, rs);
 			}
-		
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			JdbcUtil.close(conn, pstmt, rs);
+		}
+	
 		return vo;
 	}
 	
@@ -138,6 +140,7 @@ public class UserDAO {
 	public UserVO getUserInfo(String id) {
 		
 		UserVO vo = null;
+		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -146,30 +149,32 @@ public class UserDAO {
 		
 		try {
 			
-			conn = DriverManager.getConnection(url,uid,upw);
+			conn = DriverManager.getConnection(url, uid, upw);
+			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, id);
+			
 			rs = pstmt.executeQuery();
-			while(rs.next()) {
+			
+			if(rs.next()) { //다음이 있다면 true
 				
-				vo = new UserVO()		;
-				vo.setId(rs.getString("id"));
-				vo.setPw(rs.getString("Pw"));
-				vo.setName(rs.getString("Name"));
-				vo.setEmail(rs.getString("Email"));
-				vo.setAddress(rs.getString("Address"));
+				//데이터 ORM작업
+				String name = rs.getString("name");
+				String email = rs.getString("email");
+				String address = rs.getString("address");
+				String gender =rs.getString("gender");
+				Timestamp regdate = rs.getTimestamp("regdate");
 				
-				
+				vo = new UserVO(id, null, name, email, address, gender, regdate);
 				
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
-			JdbcUtil.close(conn, pstmt, null);
+		} finally {
+			JdbcUtil.close(conn, pstmt, rs);
 		}
-		
-		
+
 		return vo;
 	}
 	
@@ -180,26 +185,29 @@ public class UserDAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		
-		String sql = "update users set pw = ?, name = ?, email = ?, address = ?, gender = ? where id = ? ";
+		String sql = "update users set pw = ?, name = ?, email = ?, address = ?, gender = ? where id = ?";
+		
 		try {
-			conn = DriverManager.getConnection(url,uid,upw);
+			
+			conn = DriverManager.getConnection(url, uid, upw);
 			
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1,vo.getPw());
-			pstmt.setString(2,vo.getName());
-			pstmt.setString(3,vo.getEmail());
-			pstmt.setString(4,vo.getAddress());
-			pstmt.setString(5,vo.getGender());
-			pstmt.setString(6,vo.getId());
+			pstmt.setString(1, vo.getPw() );
+			pstmt.setString(2, vo.getName() );
+			pstmt.setString(3, vo.getEmail() );
+			pstmt.setString(4, vo.getAddress() );
+			pstmt.setString(5, vo.getGender() );
+			pstmt.setString(6, vo.getId() );
 			
 			result = pstmt.executeUpdate(); //0이면 실패, 1이면 성공
 			
-			
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
+		} finally {
 			JdbcUtil.close(conn, pstmt, null);
 		}
+		
+		
 		
 		return result;
 	}
@@ -219,13 +227,17 @@ public class UserDAO {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, id);
 			
-			pstmt.execute();
+			pstmt.executeUpdate();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
+		} finally {
 			JdbcUtil.close(conn, pstmt, null);
 		}
+		
+		
 	}
+	
 	
 	
 	

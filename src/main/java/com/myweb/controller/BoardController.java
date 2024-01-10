@@ -63,6 +63,7 @@ public class BoardController extends HttpServlet {
 			response.sendRedirect("list.board");
 		} else if( path.equals("/board/content.board") ) {
 			
+			service.hitUpdae(request, response); //조회수
 			BoardVO vo = service.getContent(request, response);
 			request.setAttribute("vo", vo);
 			
@@ -88,17 +89,26 @@ public class BoardController extends HttpServlet {
 			 * 3.성공실패 여부는 정수형으로 반환을 받으세요.
 			 * 4.컨트롤러에서는 성공시에 상세화면 redirect, 
 			 * 실패시에는 수정화면으로 redirect 
+			 * 
 			 */
-		}
-			
-		
 			int result = service.update(request, response);
-		
+			
 			if(result == 1) {//성공
 				response.sendRedirect("content.board?bno=" + request.getParameter("bno"));
 			}else {//실패
-				response.sendRedirect("modify.board?bno=" + request.getParameter("bno"));
+				response.sendRedirect("modify.board?bno=" + request.getParameter("bno"));	
+			} 
+			}else if(path.equals("/board/delete.board")) {
+				service.delete(request, response);
+				response.sendRedirect("list.board");
 			}
+		
+			
+			
+				
+				
+			
+			
 			
 		
 		
